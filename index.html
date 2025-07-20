@@ -108,8 +108,8 @@
 <body>
 
   <div id="main-page">
-    <h1>喵喵的营养记录器🍱</h1>
-    <button class="link-button" onclick="showManager()">🔧 管理食物选项</button>
+    <h1>营养计算器🍱</h1>
+    <button class="link-button" onclick="showManager()">🔧 点击管理食物数据库</button>
 
     <div class="meal-section" id="breakfast">
       <h2>🍞 早餐</h2>
@@ -176,24 +176,30 @@
     let foodData = {};
 
     function loadFoodsFromStorage() {
-      foodOptions = ["核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", 
-      "包子", "芋头","白米藜麦饭", "苦荞麦面", "普通面条", "双吉","菠菜", "小白菜", 
-      "上海青", "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","豆腐", "牛奶", 
-      "酸奶", "荷兰豆", "四季豆","大白菜", "鸡蛋", "车厘子", "黄心奇异果","虾仁", 
-      "三文鱼", "奶酪","大家乐鸡胸肉饭", "大家乐三文鱼饭"];
+      foodOptions = [ "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子", "芋头",
+        "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
+       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
       foodData = {
-        "核桃仁": { protein: 15, carbs: 13.7, magnesium: 158, calcium: 98 },
-        "南瓜籽": { protein: 33, carbs: 10.7, magnesium: 535, calcium: 46 },
-        "熟亚麻籽": { protein: 18.3, carbs: 28.9, magnesium: 392, calcium: 255 },
-        "纯碱烤馍": { protein: 9.5, carbs: 57, magnesium: 25, calcium: 15 },
-        "普通麦片": { protein: 10.2, carbs: 65, magnesium: 40, calcium: 17 },
-        "五黑麦片": { protein: 12, carbs: 60, magnesium: 80, calcium: 35 },
+        "核桃仁": { protein: 13.8, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
+        "南瓜籽": { protein: 29.4, carbs: 10.8, magnesium: 321, calcium: 46 ,defaultGrams:5.4},
+        "熟亚麻籽": { protein: 24.9, carbs: 3.7, magnesium: 392, calcium: 255 ,defaultGrams:5},
+        "纯碱烤馍": { protein: 14.1, carbs: 77.6, magnesium: 25, calcium: 15 ,defaultGrams:13},
+        "普通麦片": { protein: 14, carbs: 56.4, magnesium: 112, calcium: 17 ,defaultGrams:40},
+        "五黑麦片": { protein: 15, carbs: 60.6, magnesium: 184, calcium: 35 ,defaultGrams:40},
         "包子": { protein: 6.3, carbs: 39.6, magnesium: 20, calcium: 13 },
         "芋头": { protein: 2.1, carbs: 20.1, magnesium: 33, calcium: 43 },
-        "白米藜麦饭": { protein: 3.4, carbs: 26.7, magnesium: 30, calcium: 8 },
-        "苦荞麦面": { protein: 11.2, carbs: 71.5, magnesium: 251, calcium: 21 },
-        "普通面条": { protein: 8.6, carbs: 71.5, magnesium: 22, calcium: 18 },
-        "双吉": { protein: 17.8, carbs: 31.3, magnesium: 22, calcium: 159 },
+        "白米藜麦饭（份）": { protein: 4, carbs: 29.9, magnesium: 50.9, calcium: 11.7 ,defaultGrams:100},
+        "苦荞麦面": { protein: 10, carbs: 71.7, magnesium: 251, calcium: 21,defaultGrams:100 },
+        "普通面条": { protein: 11.2, carbs: 72, magnesium: 22, calcium: 18 },
+        "双吉（份）": { protein: 27, carbs: 32, magnesium: 22, calcium: 159 ,defaultGrams:100},
+        "单吉（份）": { protein: 17, carbs: 31, magnesium: 20, calcium: 144 ,defaultGrams:100},
+        "0吉（汉堡包）（份）": { protein: 14, carbs: 29, magnesium: 18, calcium: 143,defaultGrams:100 },
+        "麦香鱼（份）": { protein: 16, carbs: 37, magnesium: 25, calcium: 300 ,defaultGrams:100},
+        "麦香鸡（份）": { protein: 16, carbs: 41, magnesium: 22, calcium: 150 ,defaultGrams:100},
+        "猪柳麦满分（份）": { protein: 16, carbs: 25, magnesium: 20, calcium: 250,defaultGrams:100 },
+        "猪柳蛋麦满分（份）": { protein: 23, carbs: 26, magnesium: 25, calcium: 300 ,defaultGrams:100},
         "菠菜": { protein: 2.6, carbs: 2.9, magnesium: 65, calcium: 99 },
         "小白菜": { protein: 1.5, carbs: 1.8, magnesium: 13, calcium: 84 },          
         "上海青": { protein: 1.3, carbs: 1.7, magnesium: 12, calcium: 108 },
@@ -203,18 +209,19 @@
         "西蓝花": { protein: 2.8, carbs: 4.9, magnesium: 21, calcium: 47 },
         "紫甘蓝": { protein: 1.9, carbs: 6.4, magnesium: 11, calcium: 43 },          
         "豆腐": { protein: 8.1, carbs: 2.2, magnesium: 31, calcium: 164 },
+        "纳豆": { protein: 15, carbs: 19.4, magnesium: 100, calcium: 90,defaultGrams:50 },
         "牛奶": { protein: 3.4, carbs: 4.8, magnesium: 11, calcium: 104 },
         "酸奶": { protein: 3.0, carbs: 6.6, magnesium: 17, calcium: 120 },
         "荷兰豆": { protein: 2.8, carbs: 6.9, magnesium: 27, calcium: 30 },
         "四季豆": { protein: 2.4, carbs: 5.8, magnesium: 33, calcium: 42 },
-        "鸡蛋": { protein: 13.3, carbs: 1.3, magnesium: 10, calcium: 56 },
-        "车厘子": { protein: 1.0, carbs: 16, magnesium: 11, calcium: 13 },
-        "黄心奇异果": { protein: 1.2, carbs: 14.5, magnesium: 17, calcium: 34 },
-        "虾仁": { protein: 20, carbs: 1.5, magnesium: 30, calcium: 70 },
-        "三文鱼": { protein: 20.8, carbs: 0, magnesium: 35, calcium: 15 },
-        "奶酪": { protein: 25, carbs: 3, magnesium: 23, calcium: 700 },
-        "大家乐鸡胸肉饭": { protein: 50,carbs: 40.6,magnesium: 70.9,calcium: 44.3},
-        "大家乐三文鱼饭": {protein: 45,carbs: 40.6,magnesium: 82.8,calcium: 52.3}
+        "鸡蛋（个）": { protein: 6.5, carbs: 0.6, magnesium: 5.5, calcium: 28 },
+        "车厘子": { protein: 1.0, carbs: 16, magnesium: 11, calcium: 13 ,defaultGrams:45},
+        "黄心奇异果": { protein: 1.2, carbs: 14.5, magnesium: 17, calcium: 34,defaultGrams:110 },
+        "虾仁": { protein: 13.5, carbs: 0, magnesium: 30, calcium: 70 },
+        "三文鱼": { protein: 20.5, carbs: 0, magnesium: 35, calcium: 15 },
+        "奶酪": { protein: 22, carbs: 2.6, magnesium: 23, calcium: 691 ,defaultGrams:20},
+        "大家乐鸡胸肉饭（份）": { protein: 50,carbs: 40.6,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
+        "大家乐三文鱼饭（份）": {protein: 45,carbs: 40.6,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
       };
       const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
       Object.keys(customFoods).forEach(name => {
@@ -268,10 +275,11 @@
       `;
       for (const name of [
         "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子", "芋头",
-        "白米藜麦饭", "苦荞麦面", "普通面条", "双吉", "菠菜", "小白菜", "上海青",
-        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝", "豆腐", "牛奶", "酸奶", "荷兰豆", "四季豆",
-        "大白菜", "鸡蛋", "车厘子", "黄心奇异果","虾仁", "三文鱼", "奶酪","大家乐鸡胸肉饭", "大家乐三文鱼饭"
-      ]) {
+        "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
+       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
+        {
         const f = foodData[name];
         if (!f) continue;
         const row = document.createElement("tr");
@@ -326,6 +334,11 @@
       const label1 = document.createElement("label");
       label1.textContent = "食物:";
       const select = document.createElement("select");
+      const placeholderOption = document.createElement("option");
+      placeholderOption.textContent = "请选择";
+      placeholderOption.disabled = true;
+      placeholderOption.selected = true;
+      select.appendChild(placeholderOption);
       foodOptions.forEach(opt => {
         const option = document.createElement("option");
         option.textContent = opt;
@@ -338,9 +351,13 @@
       label2.textContent = "克数:";
       const input = document.createElement("input");
       input.type = "number";
-      input.placeholder = "请输入克数";
+      input.placeholder = "克数（按份计则输入100）";
 
       select.onchange = input.oninput = () => {
+        const selectedFood = select.value;
+        if (foodData[selectedFood]?.defaultGrams && !input.value) {
+         input.value = foodData[selectedFood].defaultGrams;
+        }
         calculateMeal(mealId);
         calculateTotal();
       };
