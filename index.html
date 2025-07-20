@@ -132,16 +132,21 @@
       <div class="totals" id="dinner-total">营养成分: 等待输入中...</div>
     </div>
 
-    <h2>📊 每日总计</h2>
-    <div class="meal-section">
-      <div class="totals" id="daily-total">
-        蛋白质：-- g<br />
-        碳水：-- g<br />
-        镁：-- mg<br />
-        钙：-- mg<br />
-      </div>
+    <h2>📊 每日摄入记录 / 总计</h2>
+    <ul id="intakeTable">
+    </ul>
+    <!-- 总计显示区域 -->
+    <div class="totals" id="daily-total">
+      蛋白质：-- g<br />
+      碳水：-- g<br />
+      镁：-- mg<br />
+      钙：-- mg<br />
     </div>
-  </div>
+      <!-- 这里将由 JS 动态添加记录项 -->
+    </ul>
+    <!-- 重置按钮 -->
+    <button onclick="resetDailyIntake()">重置今日记录</button>
+    </div>
 
   <div id="manager-page" class="hidden">
     <h1>🍽️ 食物管理</h1>
@@ -180,7 +185,7 @@
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
         "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
-        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
+        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
       foodData = {
         "核桃仁": { protein: 13.8, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
         "南瓜籽": { protein: 29.4, carbs: 10.8, magnesium: 321, calcium: 46 ,defaultGrams:5.4},
@@ -219,9 +224,10 @@
         "黄心奇异果": { protein: 1.2, carbs: 14.5, magnesium: 17, calcium: 34,defaultGrams:110 },
         "虾仁": { protein: 13.5, carbs: 0, magnesium: 30, calcium: 70 },
         "三文鱼": { protein: 20.5, carbs: 0, magnesium: 35, calcium: 15 },
+        "猪肝": { protein: 29.3, carbs: 3.6, magnesium: 18, calcium: 8 },
         "奶酪": { protein: 22, carbs: 2.6, magnesium: 23, calcium: 691 ,defaultGrams:20},
-        "大家乐鸡胸肉饭（份）": { protein: 50,carbs: 40.6,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
-        "大家乐三文鱼饭（份）": {protein: 45,carbs: 40.6,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
+        "大家乐鸡胸肉饭（份）": { protein: 50,carbs: 86.7,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
+        "大家乐三文鱼饭（份）": {protein: 45,carbs: 86.7,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
       };
       const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
       Object.keys(customFoods).forEach(name => {
@@ -245,6 +251,7 @@
           <th>碳水 (g)</th>
           <th>镁 (mg)</th>
           <th>钙 (mg)</th>
+          <th>操作</th>
         </tr>
       `;
       for (const name in customFoods) {
@@ -256,6 +263,10 @@
           <td>${f.carbs}</td>
           <td>${f.magnesium}</td>
           <td>${f.calcium}</td>
+          <td>
+            <button onclick="editFood('${name}')">✏️编辑</button>
+            <button onclick="deleteCustomFood('${name}')">删除</button>
+          </td>
         `;
         customTable.appendChild(row);
       }
@@ -278,7 +289,7 @@
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
         "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
-        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
         {
         const f = foodData[name];
         if (!f) continue;
@@ -433,6 +444,48 @@
       addFoodEntry('breakfast');
       addFoodEntry('lunch');
       addFoodEntry('dinner');
+    }
+
+    function editFood(name) {
+      const foods = JSON.parse(localStorage.getItem("customFoods") || "{}");
+      const f = foods[name];
+
+      const newProtein = prompt(`修改【${name}】的蛋白质（g/100g）：`, f.protein);
+      const newCarbs = prompt(`修改【${name}】的碳水（g/100g）：`, f.carbs);
+      const newMag = prompt(`修改【${name}】的镁（mg/100g）：`, f.magnesium);
+      const newCal = prompt(`修改【${name}】的钙（mg/100g）：`, f.calcium);
+
+      if (
+        newProtein !== null &&
+        newCarbs !== null &&
+        newMag !== null &&
+        newCal !== null
+      ) {
+        foods[name] = {
+          protein: parseFloat(newProtein),
+          carbs: parseFloat(newCarbs),
+          magnesium: parseFloat(newMag),
+          calcium: parseFloat(newCal)
+        };
+        localStorage.setItem("customFoods", JSON.stringify(foods));
+        renderFoodList();
+        alert("修改成功！");
+      }
+      }
+    function deleteCustomFood(name) {
+      if (confirm(`确定要删除 ${name} 吗？`)) {
+        const foods = JSON.parse(localStorage.getItem("customFoods") || "{}");
+        delete foods[name];
+        localStorage.setItem("customFoods", JSON.stringify(foods));
+        renderFoodList();
+        alert(`${name} 已删除`);
+      }
+    }
+
+    function resetDailyIntake() {
+      dailyIntake = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
+      document.getElementById("intakeBody").innerHTML = "";
+      updateTotal();
     }
 
     loadFoodsFromStorage();
