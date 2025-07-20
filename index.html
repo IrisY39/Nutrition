@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>营养计算器</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f7f7f7;
+    }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 10px;
+      background-color: #fdfcfb;
+    }
+    h1 {
+      color: #333;
+    }
+    .link-button {
+      margin-top: 5px;
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: #ffddaa;
+      color: #333;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    h2 {
+      color: #333;
+      margin-top: 20px;
+    }
+    .meal-section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .food-entry {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    select, input {
+      padding: 8px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .totals {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+    .add-food {
+      margin-top: 10px;
+      padding: 6px 12px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    ul li {
+      margin-bottom: 5px;
+    }
+    @media (min-width: 600px) {
+      .food-entry {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      }
+      label {
+        width: 80px;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-page">
+    <h1>喵喵的营养记录器🍱</h1>
+    <button class="link-button" onclick="showManager()">🔧 管理食物选项</button>
+
+    <div class="meal-section" id="breakfast">
+      <h2>🍞 早餐</h2>
+      <div class="food-list"></div>
+      <button class="add-food" onclick="addFoodEntry('breakfast')">➕ 添加食物</button>
+      <div class="totals" id="breakfast-total">营养成分: 等待输入中...</div>
+    </div>
+
+    <div class="meal-section" id="lunch">
+      <h2>🍱 午餐</h2>
+      <div class="food-list"></div>
+      <button class="add-food" onclick="addFoodEntry('lunch')">➕ 添加食物</button>
+      <div class="totals" id="lunch-total">营养成分: 等待输入中...</div>
+    </div>
+
+    <div class="meal-section" id="dinner">
+      <h2>🍔 晚餐</h2>
+      <div class="food-list"></div>
+      <button class="add-food" onclick="addFoodEntry('dinner')">➕ 添加食物</button>
+      <div class="totals" id="dinner-total">营养成分: 等待输入中...</div>
+    </div>
+
+    <h2>📊 每日总计</h2>
+    <div class="meal-section">
+      <div class="totals" id="daily-total">
+        蛋白质：-- g<br />
+        碳水：-- g<br />
+        镁：-- mg<br />
+        钙：-- mg<br />
+      </div>
+    </div>
+  </div>
+
+  <div id="manager-page" class="hidden">
+    <h1>🍽️ 食物管理</h1>
+    <button class="link-button" onclick="showMain()">⬅️ 返回</button>
+
+    <label for="foodName">食物名称：</label>
+    <input type="text" id="foodName" placeholder="例如：鸡蛋">
+
+    <label for="protein">蛋白质（g/100g）：</label>
+    <input type="number" id="protein">
+
+    <label for="carbs">碳水（g/100g）：</label>
+    <input type="number" id="carbs">
+
+    <label for="magnesium">镁（mg/100g）：</label>
+    <input type="number" id="magnesium">
+
+    <label for="calcium">钙（mg/100g）：</label>
+    <input type="number" id="calcium">
+
+    <button onclick="addFood()">➕ 添加食物</button>
+
+    <h2>📋 当前默认食物数据库：</h2>
+    <ul id="foodReference"></ul>
+
+    <h2>📝 你添加的自定义食物：</h2>
+    <ul id="foodList"></ul>
+  </div>
+
+  <script>
+    let foodOptions = [];
+    let foodData = {};
+
+    function loadFoodsFromStorage() {
+      foodOptions = ["核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", 
+      "包子", "芋头","白米藜麦饭", "苦荞麦面", "普通面条", "双吉","菠菜", "小白菜", 
+      "上海青", "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","豆腐", "牛奶", 
+      "酸奶", "荷兰豆", "四季豆","大白菜", "鸡蛋", "车厘子", "黄心奇异果","虾仁", 
+      "三文鱼", "奶酪","大家乐鸡胸肉饭", "大家乐三文鱼饭"];
+      foodData = {
+        "核桃仁": { protein: 15, carbs: 13.7, magnesium: 158, calcium: 98 },
+        "南瓜籽": { protein: 33, carbs: 10.7, magnesium: 535, calcium: 46 },
+        "熟亚麻籽": { protein: 18.3, carbs: 28.9, magnesium: 392, calcium: 255 },
+        "纯碱烤馍": { protein: 9.5, carbs: 57, magnesium: 25, calcium: 15 },
+        "普通麦片": { protein: 10.2, carbs: 65, magnesium: 40, calcium: 17 },
+        "五黑麦片": { protein: 12, carbs: 60, magnesium: 80, calcium: 35 },
+        "包子": { protein: 6.3, carbs: 39.6, magnesium: 20, calcium: 13 },
+        "芋头": { protein: 2.1, carbs: 20.1, magnesium: 33, calcium: 43 },
+        "白米藜麦饭": { protein: 3.4, carbs: 26.7, magnesium: 30, calcium: 8 },
+        "苦荞麦面": { protein: 11.2, carbs: 71.5, magnesium: 251, calcium: 21 },
+        "普通面条": { protein: 8.6, carbs: 71.5, magnesium: 22, calcium: 18 },
+        "双吉": { protein: 17.8, carbs: 31.3, magnesium: 22, calcium: 159 },
+        "菠菜": { protein: 2.6, carbs: 2.9, magnesium: 65, calcium: 99 },
+        "小白菜": { protein: 1.5, carbs: 1.8, magnesium: 13, calcium: 84 },          
+        "上海青": { protein: 1.3, carbs: 1.7, magnesium: 12, calcium: 108 },
+        "茄子": { protein: 1.1, carbs: 5.4, magnesium: 13, calcium: 11 },
+        "西红柿": { protein: 0.9, carbs: 3.9, magnesium: 9, calcium: 10 },
+        "胡萝卜": { protein: 1.0, carbs: 8.2, magnesium: 12, calcium: 32 },
+        "西蓝花": { protein: 2.8, carbs: 4.9, magnesium: 21, calcium: 47 },
+        "紫甘蓝": { protein: 1.9, carbs: 6.4, magnesium: 11, calcium: 43 },          
+        "豆腐": { protein: 8.1, carbs: 2.2, magnesium: 31, calcium: 164 },
+        "牛奶": { protein: 3.4, carbs: 4.8, magnesium: 11, calcium: 104 },
+        "酸奶": { protein: 3.0, carbs: 6.6, magnesium: 17, calcium: 120 },
+        "荷兰豆": { protein: 2.8, carbs: 6.9, magnesium: 27, calcium: 30 },
+        "四季豆": { protein: 2.4, carbs: 5.8, magnesium: 33, calcium: 42 },
+        "鸡蛋": { protein: 13.3, carbs: 1.3, magnesium: 10, calcium: 56 },
+        "车厘子": { protein: 1.0, carbs: 16, magnesium: 11, calcium: 13 },
+        "黄心奇异果": { protein: 1.2, carbs: 14.5, magnesium: 17, calcium: 34 },
+        "虾仁": { protein: 20, carbs: 1.5, magnesium: 30, calcium: 70 },
+        "三文鱼": { protein: 20.8, carbs: 0, magnesium: 35, calcium: 15 },
+        "奶酪": { protein: 25, carbs: 3, magnesium: 23, calcium: 700 },
+        "大家乐鸡胸肉饭": { protein: 50,carbs: 40.6,magnesium: 70.9,calcium: 44.3},
+        "大家乐三文鱼饭": {protein: 45,carbs: 40.6,magnesium: 82.8,calcium: 52.3}
+      };
+      const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
+      Object.keys(customFoods).forEach(name => {
+        foodOptions.push(name);
+        foodData[name] = customFoods[name];
+      });
+    }
+
+    
+    
+    function renderFoodList() {
+      const customContainer = document.getElementById("foodList");
+      customContainer.innerHTML = "";
+
+      const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
+      const customTable = document.createElement("table");
+      customTable.innerHTML = `
+        <tr>
+          <th>食物</th>
+          <th>蛋白质 (g)</th>
+          <th>碳水 (g)</th>
+          <th>镁 (mg)</th>
+          <th>钙 (mg)</th>
+        </tr>
+      `;
+      for (const name in customFoods) {
+        const f = customFoods[name];
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${f.protein}</td>
+          <td>${f.carbs}</td>
+          <td>${f.magnesium}</td>
+          <td>${f.calcium}</td>
+        `;
+        customTable.appendChild(row);
+      }
+      customContainer.appendChild(customTable);
+
+      const ref = document.getElementById("foodReference");
+      ref.innerHTML = "";
+      const defaultTable = document.createElement("table");
+      defaultTable.innerHTML = `
+        <tr>
+          <th>食物</th>
+          <th>蛋白质 (g)</th>
+          <th>碳水 (g)</th>
+          <th>镁 (mg)</th>
+          <th>钙 (mg)</th>
+        </tr>
+      `;
+      for (const name of [
+        "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子", "芋头",
+        "白米藜麦饭", "苦荞麦面", "普通面条", "双吉", "菠菜", "小白菜", "上海青",
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝", "豆腐", "牛奶", "酸奶", "荷兰豆", "四季豆",
+        "大白菜", "鸡蛋", "车厘子", "黄心奇异果","虾仁", "三文鱼", "奶酪","大家乐鸡胸肉饭", "大家乐三文鱼饭"
+      ]) {
+        const f = foodData[name];
+        if (!f) continue;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${f.protein}</td>
+          <td>${f.carbs}</td>
+          <td>${f.magnesium}</td>
+          <td>${f.calcium}</td>
+        `;
+        defaultTable.appendChild(row);
+      }
+      ref.appendChild(defaultTable);
+    }
+
+
+    function addFood() {
+      const name = document.getElementById("foodName").value.trim();
+      const protein = parseFloat(document.getElementById("protein").value);
+      const carbs = parseFloat(document.getElementById("carbs").value);
+      const magnesium = parseFloat(document.getElementById("magnesium").value);
+      const calcium = parseFloat(document.getElementById("calcium").value);
+
+      if (!name || isNaN(protein) || isNaN(carbs) || isNaN(magnesium) || isNaN(calcium)) {
+        alert("请填写完整信息");
+        return;
+      }
+      const foods = JSON.parse(localStorage.getItem("customFoods") || "{}");
+      foods[name] = { protein, carbs, magnesium, calcium };
+      localStorage.setItem("customFoods", JSON.stringify(foods));
+      renderFoodList();
+      alert("添加成功！");
+    }
+
+    function showManager() {
+      document.getElementById('main-page').classList.add('hidden');
+      document.getElementById('manager-page').classList.remove('hidden');
+      renderFoodList();
+    }
+
+    function showMain() {
+      document.getElementById('manager-page').classList.add('hidden');
+      document.getElementById('main-page').classList.remove('hidden');
+      resetAll();
+    }
+
+    function createFoodEntry(mealId) {
+      const container = document.createElement("div");
+
+      const foodDiv = document.createElement("div");
+      foodDiv.className = "food-entry";
+      const label1 = document.createElement("label");
+      label1.textContent = "食物:";
+      const select = document.createElement("select");
+      foodOptions.forEach(opt => {
+        const option = document.createElement("option");
+        option.textContent = opt;
+        select.appendChild(option);
+      });
+
+      const gramDiv = document.createElement("div");
+      gramDiv.className = "food-entry";
+      const label2 = document.createElement("label");
+      label2.textContent = "克数:";
+      const input = document.createElement("input");
+      input.type = "number";
+      input.placeholder = "请输入克数";
+
+      select.onchange = input.oninput = () => {
+        calculateMeal(mealId);
+        calculateTotal();
+      };
+
+      foodDiv.appendChild(label1);
+      foodDiv.appendChild(select);
+      gramDiv.appendChild(label2);
+      gramDiv.appendChild(input);
+      container.appendChild(foodDiv);
+      container.appendChild(gramDiv);
+      return container;
+    }
+
+    function addFoodEntry(mealId) {
+      const section = document.querySelector(`#${mealId} .food-list`);
+      const entry = createFoodEntry(mealId);
+      section.appendChild(entry);
+    }
+
+    function calculateMeal(mealId) {
+      const entries = document.querySelectorAll(`#${mealId} .food-list > div`);
+      let total = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
+
+      entries.forEach(container => {
+        const selects = container.querySelectorAll("select");
+        const inputs = container.querySelectorAll("input");
+
+        if (selects.length && inputs.length) {
+          const food = selects[0].value;
+          const grams = parseFloat(inputs[0].value);
+          if (foodData[food] && !isNaN(grams)) {
+            const ratio = grams / 100;
+            total.protein += foodData[food].protein * ratio;
+            total.carbs += foodData[food].carbs * ratio;
+            total.magnesium += foodData[food].magnesium * ratio;
+            total.calcium += foodData[food].calcium * ratio;
+          }
+        }
+      });
+
+      const totalDiv = document.querySelector(`#${mealId}-total`);
+      totalDiv.innerHTML = `蛋白质：${total.protein.toFixed(1)} g<br/>碳水：${total.carbs.toFixed(1)} g<br/>镁：${total.magnesium.toFixed(1)} mg<br/>钙：${total.calcium.toFixed(1)} mg`;
+    }
+
+    function calculateTotal() {
+      const meals = ['breakfast', 'lunch', 'dinner'];
+      let grandTotal = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
+      meals.forEach(meal => {
+        const entries = document.querySelectorAll(`#${meal} .food-list > div`);
+        entries.forEach(container => {
+          const selects = container.querySelectorAll("select");
+          const inputs = container.querySelectorAll("input");
+          if (selects.length && inputs.length) {
+            const food = selects[0].value;
+            const grams = parseFloat(inputs[0].value);
+            if (foodData[food] && !isNaN(grams)) {
+              const ratio = grams / 100;
+              grandTotal.protein += foodData[food].protein * ratio;
+              grandTotal.carbs += foodData[food].carbs * ratio;
+              grandTotal.magnesium += foodData[food].magnesium * ratio;
+              grandTotal.calcium += foodData[food].calcium * ratio;
+            }
+          }
+        });
+      });
+      const totalDiv = document.querySelector("#daily-total");
+      totalDiv.innerHTML = `蛋白质：${grandTotal.protein.toFixed(1)} g<br/>碳水：${grandTotal.carbs.toFixed(1)} g<br/>镁：${grandTotal.magnesium.toFixed(1)} mg<br/>钙：${grandTotal.calcium.toFixed(1)} mg`;
+    }
+
+    function resetAll() {
+      document.querySelectorAll('.food-list').forEach(section => section.innerHTML = "");
+      loadFoodsFromStorage();
+      addFoodEntry('breakfast');
+      addFoodEntry('lunch');
+      addFoodEntry('dinner');
+    }
+
+    loadFoodsFromStorage();
+    resetAll();
+  </script>
+</body>
+</html>
