@@ -103,6 +103,15 @@
         margin-bottom: 0;
       }
     }
+    .remove-button {
+      margin-left: 6px;
+      padding: 2px 6px;
+      background: #ffe5e5;
+      border: 1px solid #cc4444;
+      color: #cc0000;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -138,16 +147,16 @@
     <!-- 总计显示区域 -->
     <div class="totals" id="daily-total">
       蛋白质：-- g<br />
+      脂肪：-- g<br />
       碳水：-- g<br />
       镁：-- mg<br />
       钙：-- mg<br />
     </div>
       <!-- 这里将由 JS 动态添加记录项 -->
-    </ul>
     <!-- 重置按钮 -->
     <button onclick="resetDailyIntake()">重置今日记录</button>
-    </div>
 
+  </div>
   <div id="manager-page" class="hidden">
     <h1>🍽️ 食物管理</h1>
     <button class="link-button" onclick="showMain()">⬅️ 返回</button>
@@ -157,6 +166,9 @@
 
     <label for="protein">蛋白质（g/100g）：</label>
     <input type="number" id="protein">
+
+    <label for="fat">脂肪（g/100g）：</label>
+    <input type="number" id="fat">
 
     <label for="carbs">碳水（g/100g）：</label>
     <input type="number" id="carbs">
@@ -181,53 +193,59 @@
     let foodData = {};
 
     function loadFoodsFromStorage() {
-      foodOptions = [ "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子", "芋头",
+      foodOptions = [ "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
-        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
-        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
       foodData = {
-        "核桃仁": { protein: 13.8, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
-        "南瓜籽": { protein: 29.4, carbs: 10.8, magnesium: 321, calcium: 46 ,defaultGrams:5.4},
-        "熟亚麻籽": { protein: 24.9, carbs: 3.7, magnesium: 392, calcium: 255 ,defaultGrams:5},
-        "纯碱烤馍": { protein: 14.1, carbs: 77.6, magnesium: 25, calcium: 15 ,defaultGrams:13},
-        "普通麦片": { protein: 14, carbs: 56.4, magnesium: 112, calcium: 17 ,defaultGrams:40},
-        "五黑麦片": { protein: 15, carbs: 60.6, magnesium: 184, calcium: 35 ,defaultGrams:40},
-        "包子": { protein: 6.3, carbs: 39.6, magnesium: 20, calcium: 13 },
-        "芋头": { protein: 2.1, carbs: 20.1, magnesium: 33, calcium: 43 },
-        "白米藜麦饭（份）": { protein: 4, carbs: 29.9, magnesium: 50.9, calcium: 11.7 ,defaultGrams:100},
-        "苦荞麦面": { protein: 10, carbs: 71.7, magnesium: 251, calcium: 21,defaultGrams:100 },
-        "普通面条": { protein: 11.2, carbs: 72, magnesium: 22, calcium: 18 },
-        "双吉（份）": { protein: 27, carbs: 32, magnesium: 22, calcium: 159 ,defaultGrams:100},
-        "单吉（份）": { protein: 17, carbs: 31, magnesium: 20, calcium: 144 ,defaultGrams:100},
-        "0吉（汉堡包）（份）": { protein: 14, carbs: 29, magnesium: 18, calcium: 143,defaultGrams:100 },
-        "麦香鱼（份）": { protein: 16, carbs: 37, magnesium: 25, calcium: 300 ,defaultGrams:100},
-        "麦香鸡（份）": { protein: 16, carbs: 41, magnesium: 22, calcium: 150 ,defaultGrams:100},
-        "猪柳麦满分（份）": { protein: 16, carbs: 25, magnesium: 20, calcium: 250,defaultGrams:100 },
-        "猪柳蛋麦满分（份）": { protein: 23, carbs: 26, magnesium: 25, calcium: 300 ,defaultGrams:100},
-        "菠菜": { protein: 2.6, carbs: 2.9, magnesium: 65, calcium: 99 },
-        "小白菜": { protein: 1.5, carbs: 1.8, magnesium: 13, calcium: 84 },          
-        "上海青": { protein: 1.3, carbs: 1.7, magnesium: 12, calcium: 108 },
-        "茄子": { protein: 1.1, carbs: 5.4, magnesium: 13, calcium: 11 },
-        "西红柿": { protein: 0.9, carbs: 3.9, magnesium: 9, calcium: 10 },
-        "胡萝卜": { protein: 1.0, carbs: 8.2, magnesium: 12, calcium: 32 },
-        "西蓝花": { protein: 2.8, carbs: 4.9, magnesium: 21, calcium: 47 },
-        "紫甘蓝": { protein: 1.9, carbs: 6.4, magnesium: 11, calcium: 43 },          
-        "豆腐": { protein: 8.1, carbs: 2.2, magnesium: 31, calcium: 164 },
-        "纳豆": { protein: 15, carbs: 19.4, magnesium: 100, calcium: 90,defaultGrams:50 },
-        "牛奶": { protein: 3.4, carbs: 4.8, magnesium: 11, calcium: 104 },
-        "酸奶": { protein: 3.0, carbs: 6.6, magnesium: 17, calcium: 120 },
-        "荷兰豆": { protein: 2.8, carbs: 6.9, magnesium: 27, calcium: 30 },
-        "四季豆": { protein: 2.4, carbs: 5.8, magnesium: 33, calcium: 42 },
-        "鸡蛋（个）": { protein: 6.5, carbs: 0.6, magnesium: 5.5, calcium: 28 },
-        "车厘子": { protein: 1.0, carbs: 16, magnesium: 11, calcium: 13 ,defaultGrams:45},
-        "黄心奇异果": { protein: 1.2, carbs: 14.5, magnesium: 17, calcium: 34,defaultGrams:110 },
-        "虾仁": { protein: 13.5, carbs: 0, magnesium: 30, calcium: 70 },
-        "三文鱼": { protein: 20.5, carbs: 0, magnesium: 35, calcium: 15 },
-        "猪肝": { protein: 29.3, carbs: 3.6, magnesium: 18, calcium: 8 },
-        "奶酪": { protein: 22, carbs: 2.6, magnesium: 23, calcium: 691 ,defaultGrams:20},
-        "大家乐鸡胸肉饭（份）": { protein: 50,carbs: 86.7,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
-        "大家乐三文鱼饭（份）": {protein: 45,carbs: 86.7,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
+        "核桃仁": { protein: 13.8, fat:73.7, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
+        "南瓜籽": { protein: 29.4, fat:53.9,carbs: 10.8, magnesium: 321, calcium: 46 ,defaultGrams:5.4},
+        "熟亚麻籽": { protein: 24.9, fat:41.9,carbs: 3.7, magnesium: 392, calcium: 255 ,defaultGrams:5},
+        "纯碱烤馍": { protein: 14.1, fat:1.4,carbs: 77.6, magnesium: 25, calcium: 15 ,defaultGrams:13},
+        "普通麦片": { protein: 14,fat:8.1, carbs: 56.4, magnesium: 112, calcium: 17 ,defaultGrams:40},
+        "五黑麦片": { protein: 15,fat:5.5, carbs: 60.6, magnesium: 184, calcium: 35 ,defaultGrams:40},
+        "包子（个）": { protein: 5.2,fat:13.3, carbs: 31.4, magnesium: 16, calcium: 10.4 },
+        "芋头": { protein: 2.1,fat:0.2, carbs: 20.1, magnesium: 33, calcium: 43 },
+        "甜玉米": { protein: 3.4,fat:1.2, carbs: 19, magnesium: 37, calcium: 2.2 },
+        "白米藜麦饭（份）": { protein: 4, fat:1.2,carbs: 29.9, magnesium: 50.9, calcium: 11.7 ,defaultGrams:100},
+        "苦荞麦面": { protein: 10, fat:1.2,carbs: 71.7, magnesium: 251, calcium: 21,defaultGrams:100 },
+        "普通面条": { protein: 11.2,fat:2.2, carbs: 72, magnesium: 22, calcium: 18 },
+        "双吉（份）": { protein: 27,fat:22, carbs: 32, magnesium: 22, calcium: 232 ,defaultGrams:100},
+        "单吉（份）": { protein: 17,fat:12, carbs: 31, magnesium: 20, calcium: 144 ,defaultGrams:100},
+        "0吉（汉堡包）（份）": { protein: 14, fat:8,carbs: 29, magnesium: 18, calcium: 61,defaultGrams:100 },
+        "麦香鱼（份）": { protein: 16, fat:13,carbs: 37, magnesium: 25, calcium: 99 ,defaultGrams:100},
+        "麦香鸡（份）": { protein: 16, fat:17,carbs: 41, magnesium: 22, calcium: 73 ,defaultGrams:100},
+        "猪柳麦满分（份）": { protein: 16,fat:16, carbs: 25, magnesium: 20, calcium: 213,defaultGrams:100 },
+        "猪柳蛋麦满分（份）": { protein: 23,fat:21, carbs: 26, magnesium: 25, calcium: 243 ,defaultGrams:100},
+        "菠菜": { protein: 2.6,fat:0.4, carbs: 2.9, magnesium: 65, calcium: 99 },
+        "大白菜": { protein: 1.5, fat:0.2,carbs: 3.4, magnesium: 12, calcium: 57 }, 
+        "小白菜": { protein: 1.5, fat:0.2,carbs: 1.8, magnesium: 13, calcium: 84 },          
+        "上海青": { protein: 1.3,fat:0.2, carbs: 1.7, magnesium: 12, calcium: 108 },
+        "茄子": { protein: 1.1,fat:0.2, carbs: 5.4, magnesium: 13, calcium: 11 },
+        "西红柿": { protein: 0.9,fat:0.2, carbs: 3.9, magnesium: 9, calcium: 10 },
+        "胡萝卜": { protein: 1.0,fat:0.2, carbs: 8.2, magnesium: 12, calcium: 32 },
+        "西蓝花": { protein: 2.8,fat:0, carbs: 4.9, magnesium: 21, calcium: 47 },
+        "紫甘蓝": { protein: 1.9,fat:0, carbs: 6.4, magnesium: 11, calcium: 43 },
+        "羽衣甘蓝": { protein: 4.3,fat:0, carbs: 8.8, magnesium: 47, calcium: 254 },            
+        "豆腐": { protein: 8.1, fat:0,carbs: 2.2, magnesium: 31, calcium: 164 },
+        "纳豆": { protein: 15, fat:1,carbs: 19.4, magnesium: 100, calcium: 90,defaultGrams:50 },
+        "牛奶": { protein: 3.4,fat:3.7, carbs: 4.8, magnesium: 11, calcium: 104 },
+        "酸奶": { protein: 4.2,fat:4.8, carbs: 5.6, magnesium: 17, calcium: 130 },
+        "麻酱": { protein: 24.3,fat:57.8, carbs: 13.6, magnesium: 360, calcium: 1030 ,defaultGrams:22},
+        "荷兰豆": { protein: 2.8, fat:0,carbs: 6.9, magnesium: 27, calcium: 30 },
+        "四季豆": { protein: 2.4,fat:0, carbs: 5.8, magnesium: 33, calcium: 42 },
+        "鸡蛋（个）": { protein: 6.5,fat:4.85, carbs: 0.6, magnesium: 5.5, calcium: 28 },
+        "车厘子": { protein: 1.0,fat:0, carbs: 16, magnesium: 11, calcium: 13 ,defaultGrams:45},
+        "黄心奇异果": { protein: 1.2, fat:0,carbs: 14.5, magnesium: 17, calcium: 34,defaultGrams:110 },
+        "北极甜虾仁": { protein: 15, fat:0.7,carbs: 0, magnesium: 51, calcium: 83 },
+        "三文鱼": { protein: 20.5, fat:12.2,carbs: 0, magnesium: 35, calcium: 15 },
+        "盐焗鸡": { protein: 22, fat:13,carbs: 0, magnesium: 24, calcium: 11 },
+        "蒲烧鳗鱼": { protein: 17.5, fat:25.4,carbs: 4.6, magnesium: 28, calcium: 13 },
+        "猪肝": { protein: 30.7, fat:2.7,carbs: 5, magnesium: 18, calcium: 8 },
+        "奶酪": { protein: 22,fat:25.3, carbs: 2.6, magnesium: 23, calcium: 691 ,defaultGrams:20},
+        "大家乐鸡胸肉饭（份）": { protein: 50,fat:16,carbs: 86.7,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
+        "大家乐三文鱼饭（份）": {protein: 45,fat:28.3,carbs: 86.7,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
       };
       const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
       Object.keys(customFoods).forEach(name => {
@@ -248,6 +266,7 @@
         <tr>
           <th>食物</th>
           <th>蛋白质 (g)</th>
+          <th>脂肪 (g)</th>
           <th>碳水 (g)</th>
           <th>镁 (mg)</th>
           <th>钙 (mg)</th>
@@ -260,6 +279,7 @@
         row.innerHTML = `
           <td>${name}</td>
           <td>${f.protein}</td>
+          <td>${f.fat}</td>
           <td>${f.carbs}</td>
           <td>${f.magnesium}</td>
           <td>${f.calcium}</td>
@@ -279,17 +299,18 @@
         <tr>
           <th>食物</th>
           <th>蛋白质 (g)</th>
+          <th>脂肪 (g)</th>
           <th>碳水 (g)</th>
           <th>镁 (mg)</th>
           <th>钙 (mg)</th>
         </tr>
       `;
       for (const name of [
-        "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子", "芋头",
+        "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
-        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
-        "鸡蛋（个）", "车厘子", "黄心奇异果","虾仁", "三文鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","猪肝","蒲烧鳗鱼", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
         {
         const f = foodData[name];
         if (!f) continue;
@@ -297,6 +318,7 @@
         row.innerHTML = `
           <td>${name}</td>
           <td>${f.protein}</td>
+          <td>${f.fat}</td>
           <td>${f.carbs}</td>
           <td>${f.magnesium}</td>
           <td>${f.calcium}</td>
@@ -310,16 +332,17 @@
     function addFood() {
       const name = document.getElementById("foodName").value.trim();
       const protein = parseFloat(document.getElementById("protein").value);
+      const fat = parseFloat(document.getElementById("fat").value);
       const carbs = parseFloat(document.getElementById("carbs").value);
       const magnesium = parseFloat(document.getElementById("magnesium").value);
       const calcium = parseFloat(document.getElementById("calcium").value);
 
-      if (!name || isNaN(protein) || isNaN(carbs) || isNaN(magnesium) || isNaN(calcium)) {
+      if (!name || isNaN(protein) || isNaN(fat) || isNaN(carbs) || isNaN(magnesium) || isNaN(calcium)) {
         alert("请填写完整信息");
         return;
       }
       const foods = JSON.parse(localStorage.getItem("customFoods") || "{}");
-      foods[name] = { protein, carbs, magnesium, calcium };
+      foods[name] = { protein, fat, carbs, magnesium, calcium };
       localStorage.setItem("customFoods", JSON.stringify(foods));
       renderFoodList();
       alert("添加成功！");
@@ -364,11 +387,16 @@
       input.type = "number";
       input.placeholder = "克数（按份计则输入100）";
 
-      select.onchange = input.oninput = () => {
+      select.onchange = () => {
         const selectedFood = select.value;
         if (foodData[selectedFood]?.defaultGrams && !input.value) {
-         input.value = foodData[selectedFood].defaultGrams;
+          input.value = foodData[selectedFood].defaultGrams;
         }
+        calculateMeal(mealId);
+        calculateTotal();
+      };
+
+      input.oninput = () => {
         calculateMeal(mealId);
         calculateTotal();
       };
@@ -379,6 +407,20 @@
       gramDiv.appendChild(input);
       container.appendChild(foodDiv);
       container.appendChild(gramDiv);
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "删除";
+      delBtn.className = "remove-button";   // 若不用样式可删这一行
+      delBtn.onclick = () => {
+        container.remove();          // 把这一整行从 DOM 中移除
+        calculateMeal(mealId);       // 重新计算该餐小计
+        calculateTotal();            // 重新计算每日总计
+      };
+
+        // 把所有元素组装进 container
+      container.appendChild(foodDiv);
+      container.appendChild(gramDiv);
+      container.appendChild(delBtn);   // ⭐ 把按钮放进去
+
       return container;
     }
 
@@ -390,7 +432,7 @@
 
     function calculateMeal(mealId) {
       const entries = document.querySelectorAll(`#${mealId} .food-list > div`);
-      let total = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
+      let total = { protein: 0,fat: 0, carbs: 0, magnesium: 0, calcium: 0 };
 
       entries.forEach(container => {
         const selects = container.querySelectorAll("select");
@@ -402,6 +444,7 @@
           if (foodData[food] && !isNaN(grams)) {
             const ratio = grams / 100;
             total.protein += foodData[food].protein * ratio;
+            total.fat += foodData[food].fat * ratio;
             total.carbs += foodData[food].carbs * ratio;
             total.magnesium += foodData[food].magnesium * ratio;
             total.calcium += foodData[food].calcium * ratio;
@@ -410,12 +453,12 @@
       });
 
       const totalDiv = document.querySelector(`#${mealId}-total`);
-      totalDiv.innerHTML = `蛋白质：${total.protein.toFixed(1)} g<br/>碳水：${total.carbs.toFixed(1)} g<br/>镁：${total.magnesium.toFixed(1)} mg<br/>钙：${total.calcium.toFixed(1)} mg`;
+      totalDiv.innerHTML = `蛋白质：${total.protein.toFixed(1)} g<br/>脂肪：${total.fat.toFixed(1)} g<br/>碳水：${total.carbs.toFixed(1)} g<br/>镁：${total.magnesium.toFixed(1)} mg<br/>钙：${total.calcium.toFixed(1)} mg`;
     }
 
     function calculateTotal() {
       const meals = ['breakfast', 'lunch', 'dinner'];
-      let grandTotal = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
+      let grandTotal = { protein: 0, fat: 0, carbs: 0, magnesium: 0, calcium: 0 };
       meals.forEach(meal => {
         const entries = document.querySelectorAll(`#${meal} .food-list > div`);
         entries.forEach(container => {
@@ -427,6 +470,7 @@
             if (foodData[food] && !isNaN(grams)) {
               const ratio = grams / 100;
               grandTotal.protein += foodData[food].protein * ratio;
+              grandTotal.fat += foodData[food].fat * ratio;
               grandTotal.carbs += foodData[food].carbs * ratio;
               grandTotal.magnesium += foodData[food].magnesium * ratio;
               grandTotal.calcium += foodData[food].calcium * ratio;
@@ -435,7 +479,7 @@
         });
       });
       const totalDiv = document.querySelector("#daily-total");
-      totalDiv.innerHTML = `蛋白质：${grandTotal.protein.toFixed(1)} g<br/>碳水：${grandTotal.carbs.toFixed(1)} g<br/>镁：${grandTotal.magnesium.toFixed(1)} mg<br/>钙：${grandTotal.calcium.toFixed(1)} mg`;
+      totalDiv.innerHTML = `蛋白质：${grandTotal.protein.toFixed(1)} g<br/>脂肪：${grandTotal.fat.toFixed(1)} g<br/>碳水：${grandTotal.carbs.toFixed(1)} g<br/>镁：${grandTotal.magnesium.toFixed(1)} mg<br/>钙：${grandTotal.calcium.toFixed(1)} mg`;
     }
 
     function resetAll() {
@@ -451,6 +495,7 @@
       const f = foods[name];
 
       const newProtein = prompt(`修改【${name}】的蛋白质（g/100g）：`, f.protein);
+      const newFat = prompt(`修改【${name}】的脂肪（g/100g）：`, f.fat);
       const newCarbs = prompt(`修改【${name}】的碳水（g/100g）：`, f.carbs);
       const newMag = prompt(`修改【${name}】的镁（mg/100g）：`, f.magnesium);
       const newCal = prompt(`修改【${name}】的钙（mg/100g）：`, f.calcium);
@@ -463,6 +508,7 @@
       ) {
         foods[name] = {
           protein: parseFloat(newProtein),
+          fat: parseFloat(newFat),
           carbs: parseFloat(newCarbs),
           magnesium: parseFloat(newMag),
           calcium: parseFloat(newCal)
@@ -483,9 +529,28 @@
     }
 
     function resetDailyIntake() {
-      dailyIntake = { protein: 0, carbs: 0, magnesium: 0, calcium: 0 };
-      document.getElementById("intakeBody").innerHTML = "";
-      updateTotal();
+      /* 1. 清空三餐区域里的所有已添加条目 */
+      document.querySelectorAll(".food-list").forEach(sec => (sec.innerHTML = ""));
+
+      /* 2. 把每餐的小计文字恢复成初始提示 */
+      document.getElementById("breakfast-total").innerHTML = "营养成分: 等待输入中...";
+      document.getElementById("lunch-total").innerHTML     = "营养成分: 等待输入中...";
+      document.getElementById("dinner-total").innerHTML    = "营养成分: 等待输入中...";
+
+      /* 3. 清空“每日摄入记录”列表（如果你还在用它） */
+      document.getElementById("intakeTable").innerHTML = "";
+
+      /* 4. 重置底部总计 */
+      document.getElementById("daily-total").innerHTML = `
+        蛋白质：-- g<br />
+        脂肪：-- g<br />
+        碳水：-- g<br />
+        镁：-- mg<br />
+        钙：-- mg<br />
+      `;
+
+      /* 5. 如果想自动再放回三条空白输入，可调用你已有的 resetAll() */
+      resetAll();      // ← 如果需要，取消这行注释
     }
 
     loadFoodsFromStorage();
