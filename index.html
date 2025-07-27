@@ -196,7 +196,7 @@
       foodOptions = [ "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
-        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪", "麻酱",
         "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
       foodData = {
         "核桃仁": { protein: 13.8, fat:73.7, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
@@ -207,7 +207,7 @@
         "五黑麦片": { protein: 15,fat:5.5, carbs: 60.6, magnesium: 184, calcium: 35 ,defaultGrams:40},
         "包子（个）": { protein: 5.2,fat:13.3, carbs: 31.4, magnesium: 16, calcium: 10.4 ,defaultGrams:100},
         "芋头": { protein: 2.1,fat:0.2, carbs: 20.1, magnesium: 33, calcium: 43 },
-        "甜玉米": { protein: 3.4,fat:1.2, carbs: 19, magnesium: 37, calcium: 2.2 },
+        "甜玉米": { protein: 3.4,fat:1.2, carbs: 19, magnesium: 37, calcium: 2.2,defaultGrams:100 },
         "白米藜麦饭（份）": { protein: 4, fat:1.2,carbs: 29.9, magnesium: 50.9, calcium: 11.7 ,defaultGrams:100},
         "苦荞麦面": { protein: 10, fat:1.2,carbs: 71.7, magnesium: 251, calcium: 21,defaultGrams:100 },
         "普通面条": { protein: 11.2,fat:2.2, carbs: 72, magnesium: 22, calcium: 18 },
@@ -237,7 +237,7 @@
         "麻酱": { protein: 24.3,fat:57.8, carbs: 13.6, magnesium: 360, calcium: 1030 ,defaultGrams:22},
         "荷兰豆": { protein: 2.8, fat:0,carbs: 6.9, magnesium: 27, calcium: 30 },
         "四季豆": { protein: 2.4,fat:0, carbs: 5.8, magnesium: 33, calcium: 42 },
-        "鸡蛋（个）": { protein: 6.5,fat:4.85, carbs: 0.6, magnesium: 5.5, calcium: 28 },
+        "鸡蛋（个）": { protein: 6.5,fat:4.85, carbs: 0.6, magnesium: 5.5, calcium: 28 ,defaultGrams:100},
         "车厘子": { protein: 1.0,fat:0, carbs: 16, magnesium: 11, calcium: 13 ,defaultGrams:45},
         "黄心奇异果": { protein: 1.2, fat:0,carbs: 14.5, magnesium: 17, calcium: 34,defaultGrams:110 },
         "北极甜虾仁": { protein: 15, fat:0.7,carbs: 0, magnesium: 51, calcium: 83 },
@@ -311,7 +311,7 @@
         "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
        "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
-        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪", 
+        "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪","麻酱", 
         "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
         {
         const f = foodData[name];
