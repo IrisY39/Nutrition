@@ -195,9 +195,9 @@
     function loadFoodsFromStorage() {
       foodOptions = [ "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
-       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
+       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青","油麦菜","蒜薹",
         "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪", "麻酱",
-        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"];
+        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）","薯仔牛肉&四季豆肉沫两送（份）"];
       foodData = {
         "核桃仁": { protein: 13.8, fat:73.7, carbs: 1.3, magnesium: 117, calcium: 65 ,defaultGrams:5.7},
         "南瓜籽": { protein: 29.4, fat:53.9,carbs: 10.8, magnesium: 321, calcium: 46 ,defaultGrams:5.4},
@@ -222,6 +222,8 @@
         "大白菜": { protein: 1.5, fat:0.2,carbs: 3.4, magnesium: 12, calcium: 57 }, 
         "小白菜": { protein: 1.5, fat:0.2,carbs: 1.8, magnesium: 13, calcium: 84 },          
         "上海青": { protein: 1.3,fat:0.2, carbs: 1.7, magnesium: 12, calcium: 108 },
+        "油麦菜": { protein: 1.7,fat:0.3, carbs: 3.1, magnesium: 18, calcium: 67 },
+        "蒜薹": { protein: 2.3,fat:0.2, carbs: 7.5, magnesium: 25, calcium: 60 },
         "茄子": { protein: 1.1,fat:0.2, carbs: 5.4, magnesium: 13, calcium: 11 },
         "西红柿": { protein: 0.9,fat:0.2, carbs: 3.9, magnesium: 9, calcium: 10 },
         "胡萝卜": { protein: 1.0,fat:0.2, carbs: 8.2, magnesium: 12, calcium: 32 },
@@ -247,7 +249,8 @@
         "猪肝": { protein: 30.7, fat:2.7,carbs: 5, magnesium: 18, calcium: 8 },
         "奶酪": { protein: 22,fat:25.3, carbs: 2.6, magnesium: 23, calcium: 691 ,defaultGrams:20},
         "大家乐鸡胸肉饭（份）": { protein: 50,fat:16,carbs: 86.7,magnesium: 70.9,calcium: 44.3,defaultGrams:100},
-        "大家乐三文鱼饭（份）": {protein: 45,fat:28.3,carbs: 86.7,magnesium: 82.8,calcium: 52.3,defaultGrams:100}
+        "大家乐三文鱼饭（份）": {protein: 45,fat:28.3,carbs: 86.7,magnesium: 82.8,calcium: 52.3,defaultGrams:100},
+        "薯仔牛肉&四季豆肉沫两送（份）": {protein: 26.4,fat:16.5,carbs: 115.5,magnesium: 86,calcium: 61,defaultGrams:100}
       };
       const customFoods = JSON.parse(localStorage.getItem("customFoods") || "{}");
       Object.keys(customFoods).forEach(name => {
@@ -310,9 +313,9 @@
       for (const name of [
         "核桃仁", "南瓜籽", "熟亚麻籽", "纯碱烤馍", "普通麦片", "五黑麦片", "包子（个）", "芋头","甜玉米",
         "白米藜麦饭（份）", "苦荞麦面", "普通面条", "双吉（份）","单吉（份）","0吉（汉堡包）（份）",
-       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青",
+       "麦香鸡（份）","麦香鱼（份）","猪柳麦满分（份）","猪柳蛋麦满分（份）", "菠菜", "大白菜","小白菜", "上海青","油麦菜","蒜薹",
         "茄子", "西红柿", "胡萝卜", "西蓝花", "紫甘蓝","羽衣甘蓝","荷兰豆", "四季豆","彩椒","紫洋葱", "豆腐","纳豆", "牛奶", "酸奶","奶酪","麻酱", 
-        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）"]) 
+        "鸡蛋（个）", "车厘子", "黄心奇异果","北极甜虾仁", "三文鱼","盐焗鸡","蒲烧鳗鱼","猪肝", "大家乐鸡胸肉饭（份）","大家乐三文鱼饭（份）","薯仔牛肉&四季豆肉沫两送（份）"]) 
         {
         const f = foodData[name];
         if (!f) continue;
